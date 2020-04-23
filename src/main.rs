@@ -49,7 +49,7 @@ impl Run {
         };
 
         let time_reg = Regex::new(
-            r"((?P<hours>\d+)\s*h)?\s*((?P<minutes>\d+)\s*min)?((?P<seconds>\d+)\s*(s|sec))?",
+            r"((?P<hours>\d+)\s*h)?\s*((?P<minutes>\d+)\s*min)?((?P<seconds>\d+(\.\d*)?)\s*(s|sec))?",
         )
         .expect("time parsing regex is wrong!");
         let time_caps = time_reg.captures(&options.time)?;
@@ -95,19 +95,19 @@ fn display_time(time: &Time) -> String {
     t -= hours;
     let minutes = t.trunc::<minute>();
     t -= minutes;
-    let seconds = t.trunc::<second>();
+    let seconds = t;
 
     let h = hours.get::<hour>() as i32;
     let m = minutes.get::<minute>() as i32;
-    let s = seconds.get::<second>() as i32;
+    let s = seconds.get::<second>();
 
     if h > 0 {
-        format!("{} h {} min {} s", h, m, s)
+        format!("{} h {} min {:.3} s", h, m, s)
     } else {
         if m > 0 {
-            format!("{} min {} s", m, s)
+            format!("{} min {:.3} s", m, s)
         } else {
-            format!("{} s", s)
+            format!("{:.3} s", s)
         }
     }
 }

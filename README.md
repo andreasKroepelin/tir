@@ -44,6 +44,7 @@ Your average velocity compared to those of other performances:
 ```
 
 The time parameter must be of the form `<x> h <y> min <z> s` where the spaces can be omitted (use `" "` in the terminal if you want to use spaces here!) and each part (hours, minutes and seconds) can be omitted as well.
+`z` (the seconds) may contain a decimal fraction (so `12min4.32s` is a valid input).
 
 The distance parameter accepts a quantity with on of the following units: meter, kilometer, yard, foot, mile.
 All output uses kilometer (and kilometer per hour) per default.

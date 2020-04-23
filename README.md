@@ -43,6 +43,13 @@ Your average velocity compared to those of other performances:
  0.197 times  Cheetah Sarah's 100 m animal WR
 ```
 
+The time parameter must be of the form `<x> h <y> min <z> s` where the spaces can be omitted (use `" "` in the terminal if you want to use spaces here!) and each part (hours, minutes and seconds) can be omitted as well.
+
+The distance parameter accepts a quantity with on of the following units: meter, kilometer, yard, foot, mile.
+All output uses kilometer (and kilometer per hour) per default.
+To switch to using miles, use the flag `-m` or `--miles`.
+Again, you are allowed to write `13 km` instead of `13km` but remember using `" "` then.
+
 ## Installation from source
 Note that this tool is written in [Rust](https://www.rust-lang.org/) so you need to have a Rust development environment installed.
 Clone this repository and run `cargo build --release` inside the `tir` folder.

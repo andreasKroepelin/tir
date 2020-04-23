@@ -66,32 +66,60 @@ impl Run {
     }
 }
 
+struct SpecialDistance {
+    name: String,
+    distance: Length,
+}
+
+fn display_time(time: &Time) -> String {
+    let mut t = time.clone();
+
+    let hours = t.trunc::<hour>();
+    t -= hours;
+    let minutes = t.trunc::<minute>();
+    t -= minutes;
+    let seconds = t.trunc::<second>();
+
+    let h = hours.get::<hour>() as i32;
+    let m = minutes.get::<minute>() as i32;
+    let s = seconds.get::<second>() as i32;
+
+    if h > 0 {
+        format!("{} h {} min {} s", h, m, s)
+    } else {
+        if m > 0 {
+            format!("{} min {} s", m, s)
+        } else {
+            format!("{} s", s)
+        }
+    }
+}
+
 fn main() {
     let options = Options::from_args();
-    if let Some(run) = dbg!(Run::from_options(&dbg!(options))) {
+    if let Some(run) = Run::from_options(&options) {
         let vel_format = Velocity::format_args(kilometer_per_hour, DisplayStyle::Abbreviation);
-        let dist_format = Length::format_args(kilometer, DisplayStyle::Abbreviation);
-        let time_format = Time::format_args(minute, DisplayStyle::Abbreviation);
 
-        println!("Your average velocity was {}", vel_format.with(run.average_velocity()));
+        println!("Your average velocity was {}.\n", vel_format.with(run.average_velocity()));
 
         let distances = &[
-            Length::new::<kilometer>(1.0),
-            Length::new::<kilometer>(5.0),
-            Length::new::<kilometer>(10.0),
-            Length::new::<kilometer>(21.0975),
-            Length::new::<kilometer>(42.195),
+            SpecialDistance{ name: String::from("1 km"), distance: Length::new::<kilometer>(1.0) },
+            SpecialDistance{ name: String::from("5 km"), distance: Length::new::<kilometer>(5.0) },
+            SpecialDistance{ name: String::from("10 km"), distance: Length::new::<kilometer>(10.0) },
+            SpecialDistance{ name: String::from("half marathon"), distance: Length::new::<kilometer>(21.0975) },
+            SpecialDistance{ name: String::from("marathon"), distance: Length::new::<kilometer>(42.195) },
         ];
 
         let mut table = Table::new();
         table.set_format(*format::consts::FORMAT_CLEAN);
         for distance in distances {
             table.add_row(row![
-                format!("{}", dist_format.with(*distance)),
-                format!("{}", time_format.with(run.time_for_distance(distance)))
+                distance.name,
+                format!("{}", display_time(&run.time_for_distance(&distance.distance)))
             ]);
         }
 
+        println!("This is how long you would have needed for other distances:");
         table.printstd();
 
     } else {

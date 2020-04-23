@@ -5,6 +5,7 @@ use uom::si::length::{kilometer, meter};
 use uom::si::time::{hour, minute, second};
 use uom::si::velocity::{kilometer_per_hour};
 use uom::fmt::DisplayStyle;
+use prettytable::{cell,row, format,Table};
 
 #[derive(StructOpt, Debug)]
 struct Options {
@@ -69,8 +70,29 @@ fn main() {
     let options = Options::from_args();
     if let Some(run) = dbg!(Run::from_options(&dbg!(options))) {
         let vel_format = Velocity::format_args(kilometer_per_hour, DisplayStyle::Abbreviation);
+        let dist_format = Length::format_args(kilometer, DisplayStyle::Abbreviation);
+        let time_format = Time::format_args(minute, DisplayStyle::Abbreviation);
 
         println!("Your average velocity was {}", vel_format.with(run.average_velocity()));
+
+        let distances = &[
+            Length::new::<kilometer>(1.0),
+            Length::new::<kilometer>(5.0),
+            Length::new::<kilometer>(10.0),
+            Length::new::<kilometer>(21.0975),
+            Length::new::<kilometer>(42.195),
+        ];
+
+        let mut table = Table::new();
+        table.set_format(*format::consts::FORMAT_CLEAN);
+        for distance in distances {
+            table.add_row(row![
+                format!("{}", dist_format.with(*distance)),
+                format!("{}", time_format.with(run.time_for_distance(distance)))
+            ]);
+        }
+
+        table.printstd();
 
     } else {
         println!("Could not parse the given distance and time.");

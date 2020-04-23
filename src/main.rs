@@ -40,11 +40,11 @@ impl Run {
         let dist_unit = dist_caps.name("unit")?.as_str().to_lowercase();
 
         let distance = match &dist_unit[..] {
-            "m" => Length::new::<meter>(dist_value),
-            "km" => Length::new::<kilometer>(dist_value),
-            "mi" => Length::new::<mile>(dist_value),
-            "yd" => Length::new::<yard>(dist_value),
-            "ft" => Length::new::<foot>(dist_value),
+            "m" | "meter" | "meters" => Length::new::<meter>(dist_value),
+            "km" | "kilometer" | "kilometers" => Length::new::<kilometer>(dist_value),
+            "mi" | "mile" | "miles" => Length::new::<mile>(dist_value),
+            "yd" | "yard" | "yards" => Length::new::<yard>(dist_value),
+            "ft" | "foot" | "feet" => Length::new::<foot>(dist_value),
             _ => None?,
         };
 

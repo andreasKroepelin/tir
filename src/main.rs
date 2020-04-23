@@ -59,6 +59,10 @@ impl Run {
     fn average_velocity(&self) -> Velocity {
         return self.distance / self.time;
     }
+
+    fn time_for_distance(&self, other_distance: &Length) -> Time {
+        *other_distance / self.distance * self.time
+    }
 }
 
 fn main() {

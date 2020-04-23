@@ -8,8 +8,11 @@ use uom::fmt::DisplayStyle;
 use prettytable::{cell,row, format,Table};
 
 #[derive(StructOpt, Debug)]
-struct Options {
+#[structopt(name="Today I Ran", about="This tool provides you with basic information derived from the distance you ran and the time you needed. This currently contains your average velocity and estimated times for other distances.")]
+struct CommandLineOptions {
+    #[structopt(help = "the distance you ran today")]
     distance: String,
+    #[structopt(help = "the time you needed")]
     time: String,
 }
 
@@ -20,7 +23,7 @@ struct Run {
 }
 
 impl Run {
-    fn from_options(options: &Options) -> Option<Self> {
+    fn from_options(options: &CommandLineOptions) -> Option<Self> {
         let dist_reg = Regex::new(r"(?P<value>\d+(\.\d*)?)\s*(?P<unit>[[:alpha:]]*)")
             .expect("distance parsing regex is wrong!");
         let dist_caps = dist_reg.captures(&options.distance)?;
@@ -96,7 +99,7 @@ fn display_time(time: &Time) -> String {
 }
 
 fn main() {
-    let options = Options::from_args();
+    let options = CommandLineOptions::from_args();
     if let Some(run) = Run::from_options(&options) {
         let vel_format = Velocity::format_args(kilometer_per_hour, DisplayStyle::Abbreviation);
 

@@ -1,3 +1,12 @@
+use structopt::StructOpt;
+
+#[derive(StructOpt)]
+struct Options {
+    distance: String,
+    time: String,
+}
+
+
 fn main() {
-    println!("Hello, world!");
+    let options = Options::from_args();
 }

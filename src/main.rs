@@ -111,8 +111,9 @@ fn main() {
             display_time(&run.time)
         );
         println!(
-            "Your average velocity was {}.\n",
-            vel_format.with(run.average_velocity())
+            "Your average velocity was {:.3} {}.\n",
+            run.average_velocity().get::<kilometer_per_hour>(),
+            kilometer_per_hour::abbreviation()
         );
 
         let distances = &[

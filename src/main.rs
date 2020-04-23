@@ -3,7 +3,7 @@ use prettytable::{cell, format, row, Table};
 use regex::Regex;
 use structopt::StructOpt;
 use uom::si::f64::{Length, Time, Velocity};
-use uom::si::length::{kilometer, meter};
+use uom::si::length::{foot, kilometer, meter, mile, yard};
 use uom::si::ratio::{percent, ratio};
 use uom::si::time::{hour, minute, second};
 use uom::si::velocity::kilometer_per_hour;
@@ -40,6 +40,9 @@ impl Run {
         let distance = match &dist_unit[..] {
             "m" => Length::new::<meter>(dist_value),
             "km" => Length::new::<kilometer>(dist_value),
+            "mi" => Length::new::<mile>(dist_value),
+            "yd" => Length::new::<yard>(dist_value),
+            "ft" => Length::new::<foot>(dist_value),
             _ => None?,
         };
 
@@ -170,7 +173,10 @@ fn main() {
                 ]);
             }
 
-            println!("{}", "\nThis is how long you would have needed for other distances:".bold());
+            println!(
+                "{}",
+                "\nThis is how long you would have needed for other distances:".bold()
+            );
             dist_table.printstd();
 
             let velocities = &[
@@ -212,7 +218,10 @@ fn main() {
                 ]);
             }
 
-            println!("{}", "\nYour average velocity compared to those of other performances:".bold());
+            println!(
+                "{}",
+                "\nYour average velocity compared to those of other performances:".bold()
+            );
             vel_table.printstd();
         }
     } else {

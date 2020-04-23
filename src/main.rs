@@ -6,6 +6,7 @@ use uom::si::f64::{Length, Time, Velocity};
 use uom::si::length::{kilometer, meter};
 use uom::si::time::{hour, minute, second};
 use uom::si::velocity::kilometer_per_hour;
+use uom::si::Unit;
 
 #[derive(StructOpt, Debug)]
 #[structopt(
@@ -106,6 +107,12 @@ fn main() {
     if let Some(run) = Run::from_options(&options) {
         let vel_format = Velocity::format_args(kilometer_per_hour, DisplayStyle::Abbreviation);
 
+        println!(
+            "Today, you ran {} {} in {}.",
+            run.distance.get::<kilometer>(),
+            kilometer::abbreviation(),
+            display_time(&run.time)
+        );
         println!(
             "Your average velocity was {}.\n",
             vel_format.with(run.average_velocity())

@@ -12,7 +12,7 @@ use uom::si::Unit;
 #[derive(StructOpt, Debug)]
 #[structopt(
     name = "Today I Ran",
-    about = "This tool provides you with basic information derived from the distance you ran and the time you needed. This currently contains your average velocity and estimated times for other distances."
+    about = "This tool provides you with basic information derived from the distance you ran and the time you needed. This currently contains your average velocity, estimated times for other distances and comparisons with other performances."
 )]
 struct CommandLineOptions {
     #[structopt(help = "the distance you ran today")]

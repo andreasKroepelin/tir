@@ -1,8 +1,10 @@
 use regex::Regex;
 use structopt::StructOpt;
-use uom::si::f32::{Length, Time};
+use uom::si::f64::{Length, Time, Velocity};
 use uom::si::length::{kilometer, meter};
 use uom::si::time::{hour, minute, second};
+use uom::si::velocity::{kilometer_per_hour};
+use uom::fmt::DisplayStyle;
 
 #[derive(StructOpt, Debug)]
 struct Options {
@@ -53,9 +55,20 @@ impl Run {
 
         return Some(Run { distance, time });
     }
+
+    fn average_velocity(&self) -> Velocity {
+        return self.distance / self.time;
+    }
 }
 
 fn main() {
     let options = Options::from_args();
-    dbg!(Run::from_options(&dbg!(options)));
+    if let Some(run) = dbg!(Run::from_options(&dbg!(options))) {
+        let vel_format = Velocity::format_args(kilometer_per_hour, DisplayStyle::Abbreviation);
+
+        println!("Your average velocity was {}", vel_format.with(run.average_velocity()));
+
+    } else {
+        println!("Could not parse the given distance and time.");
+    }
 }

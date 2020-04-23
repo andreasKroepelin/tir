@@ -1,7 +1,7 @@
+use colored::*;
 use prettytable::{cell, format, row, Table};
 use regex::Regex;
 use structopt::StructOpt;
-use uom::fmt::DisplayStyle;
 use uom::si::f64::{Length, Time, Velocity};
 use uom::si::length::{kilometer, meter};
 use uom::si::ratio::{percent, ratio};
@@ -111,15 +111,23 @@ fn main() {
     let options = CommandLineOptions::from_args();
     if let Some(run) = Run::from_options(&options) {
         println!(
-            "Today, you ran {} {} in {}.",
-            run.distance.get::<kilometer>(),
-            kilometer::abbreviation(),
-            display_time(&run.time)
+            "Today, you ran {} in {}.",
+            format!(
+                "{} {}",
+                run.distance.get::<kilometer>(),
+                kilometer::abbreviation()
+            )
+            .bold(),
+            display_time(&run.time).bold()
         );
         println!(
-            "Your average velocity was {:.3} {}.",
-            run.average_velocity().get::<kilometer_per_hour>(),
-            kilometer_per_hour::abbreviation()
+            "{}",
+            format!(
+                "Your average velocity was {:.3} {}.",
+                run.average_velocity().get::<kilometer_per_hour>(),
+                kilometer_per_hour::abbreviation()
+            )
+            .bold()
         );
 
         if options.verbose {
@@ -154,7 +162,7 @@ fn main() {
             dist_table.set_format(*format::consts::FORMAT_CLEAN);
             for distance in distances {
                 dist_table.add_row(row![
-                    distance.name,
+                    r -> distance.name,
                     format!(
                         "{}",
                         display_time(&run.time_for_distance(&distance.distance))
@@ -162,21 +170,33 @@ fn main() {
                 ]);
             }
 
-            println!("\nThis is how long you would have needed for other distances:");
+            println!("{}", "\nThis is how long you would have needed for other distances:".bold());
             dist_table.printstd();
 
             let velocities = &[
                 NamedVelocity {
-                    name: String::from("Usain Bolt\'s 100 m WR"),
-                    velocity: Velocity::new::<kilometer_per_hour>(37.5783),
+                    name: String::from("Ashprihanal Aalto\'s 3100 mi (longest ultra marathon) WR"),
+                    velocity: Velocity::new::<kilometer_per_hour>(5.1480),
+                },
+                NamedVelocity {
+                    name: String::from("Yohann Diniz\' 50 km race walk WR"),
+                    velocity: Velocity::new::<kilometer_per_hour>(14.1143),
                 },
                 NamedVelocity {
                     name: String::from("Eliud Kipchoge\'s inofficial marathon WR"),
                     velocity: Velocity::new::<kilometer_per_hour>(21.1563),
                 },
                 NamedVelocity {
-                    name: String::from("Yohann Diniz\' 50 km race walk WR"),
-                    velocity: Velocity::new::<kilometer_per_hour>(14.1143),
+                    name: String::from("Kenenisa Bekele\'s 10000 m WR"),
+                    velocity: Velocity::new::<kilometer_per_hour>(22.8205),
+                },
+                NamedVelocity {
+                    name: String::from("Usain Bolt\'s 100 m WR"),
+                    velocity: Velocity::new::<kilometer_per_hour>(37.5783),
+                },
+                NamedVelocity {
+                    name: String::from("Cheetah Sarah\'s 100 m animal WR"),
+                    velocity: Velocity::new::<kilometer_per_hour>(60.5042),
                 },
             ];
 
@@ -184,7 +204,7 @@ fn main() {
             vel_table.set_format(*format::consts::FORMAT_CLEAN);
             for velocity in velocities {
                 vel_table.add_row(row![
-                    format!(
+                    r -> format!(
                         "{:.3} times",
                         (run.average_velocity() / velocity.velocity).get::<ratio>()
                     ),
@@ -192,7 +212,7 @@ fn main() {
                 ]);
             }
 
-            println!("\nYour average velocity divided by those of other performances:");
+            println!("{}", "\nYour average velocity compared to those of other performances:".bold());
             vel_table.printstd();
         }
     } else {

@@ -6,7 +6,7 @@ use uom::si::f64::{Length, Time, Velocity};
 use uom::si::length::{foot, kilometer, meter, mile, yard};
 use uom::si::ratio::{percent, ratio};
 use uom::si::time::{hour, minute, second};
-use uom::si::velocity::kilometer_per_hour;
+use uom::si::velocity::{kilometer_per_hour, mile_per_hour};
 use uom::si::Unit;
 
 #[derive(StructOpt, Debug)]
@@ -21,6 +21,8 @@ struct CommandLineOptions {
     time: String,
     #[structopt(short = "v", long = "verbose", help = "show additional information")]
     verbose: bool,
+    #[structopt(short = "mi", long = "miles", help = "use miles as unit of length")]
+    use_miles: bool,
 }
 
 #[derive(Debug)]
@@ -115,55 +117,97 @@ fn main() {
     if let Some(run) = Run::from_options(&options) {
         println!(
             "Today, you ran {} in {}.",
-            format!(
-                "{} {}",
-                run.distance.get::<kilometer>(),
-                kilometer::abbreviation()
-            )
-            .bold(),
+            if options.use_miles {
+                format!("{} {}", run.distance.get::<mile>(), mile::abbreviation()).bold()
+            } else {
+                format!(
+                    "{} {}",
+                    run.distance.get::<kilometer>(),
+                    kilometer::abbreviation()
+                )
+                .bold()
+            },
             display_time(&run.time).bold()
         );
         println!(
             "{}",
-            format!(
-                "Your average velocity was {:.3} {}.",
-                run.average_velocity().get::<kilometer_per_hour>(),
-                kilometer_per_hour::abbreviation()
-            )
-            .bold()
+            if options.use_miles {
+                format!(
+                    "Your average velocity was {:.3} {}.",
+                    run.average_velocity().get::<mile_per_hour>(),
+                    mile_per_hour::abbreviation()
+                )
+                .bold()
+            } else {
+                format!(
+                    "Your average velocity was {:.3} {}.",
+                    run.average_velocity().get::<kilometer_per_hour>(),
+                    kilometer_per_hour::abbreviation()
+                )
+                .bold()
+            }
         );
 
         if options.verbose {
-            let distances = &[
-                NamedLength {
-                    name: String::from("100 m"),
-                    distance: Length::new::<meter>(100.0),
-                },
-                NamedLength {
-                    name: String::from("1 km"),
-                    distance: Length::new::<kilometer>(1.0),
-                },
-                NamedLength {
-                    name: String::from("5 km"),
-                    distance: Length::new::<kilometer>(5.0),
-                },
-                NamedLength {
-                    name: String::from("10 km"),
-                    distance: Length::new::<kilometer>(10.0),
-                },
-                NamedLength {
-                    name: String::from("half marathon"),
-                    distance: Length::new::<kilometer>(21.0975),
-                },
-                NamedLength {
-                    name: String::from("marathon"),
-                    distance: Length::new::<kilometer>(42.195),
-                },
-            ];
+            let distances = if options.use_miles {
+                [
+                    NamedLength {
+                        name: String::from("100 yd"),
+                        distance: Length::new::<yard>(100.0),
+                    },
+                    NamedLength {
+                        name: String::from("1/8 mi"),
+                        distance: Length::new::<mile>(0.125),
+                    },
+                    NamedLength {
+                        name: String::from("1/4 mi"),
+                        distance: Length::new::<mile>(0.25),
+                    },
+                    NamedLength {
+                        name: String::from("1 mi"),
+                        distance: Length::new::<mile>(1.0),
+                    },
+                    NamedLength {
+                        name: String::from("half marathon"),
+                        distance: Length::new::<kilometer>(21.0975),
+                    },
+                    NamedLength {
+                        name: String::from("marathon"),
+                        distance: Length::new::<kilometer>(42.195),
+                    },
+                ]
+            } else {
+                [
+                    NamedLength {
+                        name: String::from("100 m"),
+                        distance: Length::new::<meter>(100.0),
+                    },
+                    NamedLength {
+                        name: String::from("1 km"),
+                        distance: Length::new::<kilometer>(1.0),
+                    },
+                    NamedLength {
+                        name: String::from("5 km"),
+                        distance: Length::new::<kilometer>(5.0),
+                    },
+                    NamedLength {
+                        name: String::from("10 km"),
+                        distance: Length::new::<kilometer>(10.0),
+                    },
+                    NamedLength {
+                        name: String::from("half marathon"),
+                        distance: Length::new::<kilometer>(21.0975),
+                    },
+                    NamedLength {
+                        name: String::from("marathon"),
+                        distance: Length::new::<kilometer>(42.195),
+                    },
+                ]
+            };
 
             let mut dist_table = Table::new();
             dist_table.set_format(*format::consts::FORMAT_CLEAN);
-            for distance in distances {
+            for distance in &distances {
                 dist_table.add_row(row![
                     r -> distance.name,
                     format!(

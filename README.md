@@ -4,6 +4,7 @@
 If you stay away from fancy fitness watches or tracking apps for your smartphone and all you do is
 * measure your time
 * measure the distance (the respective feature on Google Maps works quite well)
+
 when you go for a run, then *Today I Ran* might be what you need.
 
 Currently, *Today I Ran* has three features:

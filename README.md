@@ -55,3 +55,7 @@ Again, you are allowed to write `13 km` instead of `13km` but remember using `" 
 ## Installation from source
 Note that this tool is written in [Rust](https://www.rust-lang.org/) so you need to have a Rust development environment installed.
 Clone this repository and run `cargo build --release` inside the `tir` folder.
+
+## Acknowledgements
+The non-trivial parts of this tool are the parsing of the command line arguments which was done using [Structopt](https://github.com/TeXitoi/structopt) and the handling of different units which was actually quite comfortable with [uom](https://github.com/iliekturtles/uom).
+For displaying data in a tabular layout [prettytable-rs](https://github.com/phsym/prettytable-rs) was used.

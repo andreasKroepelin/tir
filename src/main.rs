@@ -70,7 +70,7 @@ impl Run {
     }
 }
 
-struct SpecialDistance {
+struct NamedLength {
     name: String,
     distance: Length,
 }
@@ -117,23 +117,23 @@ fn main() {
         );
 
         let distances = &[
-            SpecialDistance {
+            NamedLength {
                 name: String::from("1 km"),
                 distance: Length::new::<kilometer>(1.0),
             },
-            SpecialDistance {
+            NamedLength {
                 name: String::from("5 km"),
                 distance: Length::new::<kilometer>(5.0),
             },
-            SpecialDistance {
+            NamedLength {
                 name: String::from("10 km"),
                 distance: Length::new::<kilometer>(10.0),
             },
-            SpecialDistance {
+            NamedLength {
                 name: String::from("half marathon"),
                 distance: Length::new::<kilometer>(21.0975),
             },
-            SpecialDistance {
+            NamedLength {
                 name: String::from("marathon"),
                 distance: Length::new::<kilometer>(42.195),
             },

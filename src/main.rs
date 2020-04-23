@@ -45,7 +45,6 @@ impl Run {
         )
         .expect("time parsing regex is wrong!");
         let time_caps = time_reg.captures(&options.time)?;
-        let groups = ["hours", "minutes", "seconds"];
         let group_to_value = |group| {
             time_caps
                 .name(group)

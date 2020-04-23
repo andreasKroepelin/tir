@@ -21,7 +21,7 @@ struct CommandLineOptions {
     time: String,
     #[structopt(short = "v", long = "verbose", help = "show additional information")]
     verbose: bool,
-    #[structopt(short = "mi", long = "miles", help = "use miles as unit of length")]
+    #[structopt(short = "m", long = "miles", help = "use miles as unit of length")]
     use_miles: bool,
 }
 
@@ -118,10 +118,10 @@ fn main() {
         println!(
             "Today, you ran {} in {}.",
             if options.use_miles {
-                format!("{} {}", run.distance.get::<mile>(), mile::abbreviation()).bold()
+                format!("{:.3} {}", run.distance.get::<mile>(), mile::abbreviation()).bold()
             } else {
                 format!(
-                    "{} {}",
+                    "{:.3} {}",
                     run.distance.get::<kilometer>(),
                     kilometer::abbreviation()
                 )

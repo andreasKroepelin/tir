@@ -45,18 +45,16 @@ impl Run {
         )
         .expect("time parsing regex is wrong!");
         let time_caps = time_reg.captures(&options.time)?;
-        let hours = time_caps
-            .name("hours")
-            .map_or(Ok(0.0), |m| m.as_str().parse())
-            .ok()?;
-        let minutes = time_caps
-            .name("minutes")
-            .map_or(Ok(0.0), |m| m.as_str().parse())
-            .ok()?;
-        let seconds = time_caps
-            .name("seconds")
-            .map_or(Ok(0.0), |m| m.as_str().parse())
-            .ok()?;
+        let groups = ["hours", "minutes", "seconds"];
+        let group_to_value = |group| {
+            time_caps
+                .name(group)
+                .map_or(Ok(0.0), |m| m.as_str().parse())
+                .ok()
+        };
+        let hours = group_to_value("hours")?;
+        let minutes = group_to_value("minutes")?;
+        let seconds = group_to_value("seconds")?;
 
         let time =
             Time::new::<hour>(hours) + Time::new::<minute>(minutes) + Time::new::<second>(seconds);
